@@ -1,11 +1,11 @@
 import "./App.css";
-import Leaf from "./components/Leaf";
+import { Leaf } from "./components/Leaf";
 
 function App() {
   return (
     <>
       <div>
-        <Leaf />
+        <Leaf numberOfLeaves={7} />
       </div>
     </>
   );

@@ -11,26 +11,33 @@ interface FloatingImagesType {
   angle: number;
 }
 
-const FloatingImages = () => {
+interface LeafProps {
+  numberOfLeaves: number;
+}
+
+export const Leaf = ({ numberOfLeaves }: LeafProps) => {
   const containerRefs = useRef<Array<HTMLDivElement | null>>(
-    Array(21).fill(null),
+    Array(numberOfLeaves).fill(null),
   );
   const imageRefs = useRef<Array<HTMLImageElement | null>>(
-    Array(21).fill(null),
+    Array(numberOfLeaves).fill(null),
   );
   const floatingImages = useRef<FloatingImagesType[]>([]);
 
   useEffect(() => {
     const initFloatingImages = () => {
-      floatingImages.current = Array.from({ length: 21 }, (_, i) => ({
-        container: containerRefs.current[i],
-        image: imageRefs.current[i],
-        lastTime: 0,
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
-        angle: Math.random() * 360,
-        isPaused: false,
-      }));
+      floatingImages.current = Array.from(
+        { length: numberOfLeaves },
+        (_, i) => ({
+          container: containerRefs.current[i],
+          image: imageRefs.current[i],
+          lastTime: 0,
+          x: Math.random() * window.innerWidth,
+          y: Math.random() * window.innerHeight,
+          angle: Math.random() * 360,
+          isPaused: false,
+        }),
+      );
     };
     initFloatingImages();
   }, []);
@@ -40,7 +47,6 @@ const FloatingImages = () => {
       if (image.container && image.image) {
         image.isPaused = false;
 
-        // Pause the image movement when hovering or touching
         image.image.addEventListener("mouseenter", () => {
           image.isPaused = true;
         });
@@ -49,7 +55,6 @@ const FloatingImages = () => {
           image.isPaused = true;
         });
 
-        // Resume the image movement when the hover or touch ends
         image.image.addEventListener("mouseleave", () => {
           image.isPaused = false;
         });
@@ -124,17 +129,15 @@ const FloatingImages = () => {
 
   return (
     <div id="lastleaf-div">
-      {Array.from({ length: 21 }, (_, i) => (
+      {Array.from({ length: numberOfLeaves }, (_, i) => (
         <div key={i} className="parent">
           <div
-            id={`floating-image-container-${i + 1}`}
             ref={(el) => (containerRefs.current[i] = el)}
             className={styles.floatingImageContainer}
           >
             <img
               src="/thelastleaf.png"
               alt="thelastleaf"
-              id={`floating-image-${i + 1}`}
               ref={(el) => (imageRefs.current[i] = el)}
               className={styles.floatingImage}
             />
@@ -144,5 +147,3 @@ const FloatingImages = () => {
     </div>
   );
 };
-
-export default FloatingImages;
