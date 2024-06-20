@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, FC, ReactNode } from "react";
 import styles from "../styles/Leaf.module.css";
 
 interface FloatingImagesType {
@@ -13,9 +13,11 @@ interface FloatingImagesType {
 
 interface LeafProps {
   numberOfLeaves: number;
+  leafPath: string;
+  children: ReactNode;
 }
 
-export const Leaf = ({ numberOfLeaves }: LeafProps) => {
+export const Leaf: FC<LeafProps> = ({ children, numberOfLeaves, leafPath }) => {
   const containerRefs = useRef<Array<HTMLDivElement | null>>(
     Array(numberOfLeaves).fill(null),
   );
@@ -40,7 +42,7 @@ export const Leaf = ({ numberOfLeaves }: LeafProps) => {
       );
     };
     initFloatingImages();
-  }, []);
+  }, [numberOfLeaves]);
 
   useEffect(() => {
     floatingImages.current.forEach((image) => {
@@ -128,7 +130,15 @@ export const Leaf = ({ numberOfLeaves }: LeafProps) => {
   }, []);
 
   return (
-    <div id="lastleaf-div">
+    <div
+      id="lastleaf-div"
+      style={{
+        display: "flex",
+        fontSize: "0px",
+        lineHeight: "0",
+        height: "1px",
+      }}
+    >
       {Array.from({ length: numberOfLeaves }, (_, i) => (
         <div key={i} className="parent">
           <div
@@ -136,7 +146,7 @@ export const Leaf = ({ numberOfLeaves }: LeafProps) => {
             className={styles.floatingImageContainer}
           >
             <img
-              src="/thelastleaf.png"
+              src={leafPath}
               alt="thelastleaf"
               ref={(el) => (imageRefs.current[i] = el)}
               className={styles.floatingImage}
@@ -144,6 +154,19 @@ export const Leaf = ({ numberOfLeaves }: LeafProps) => {
           </div>
         </div>
       ))}
+
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          zIndex: 1,
+        }}
+      >
+        {children}
+      </div>
     </div>
   );
 };

@@ -4,9 +4,9 @@ import { Leaf } from "./components/Leaf";
 function App() {
   return (
     <>
-      <div>
-        <Leaf numberOfLeaves={7} />
-      </div>
+      <Leaf numberOfLeaves={7} leafPath="/thelastleaf.png">
+        <div>Hello</div>
+      </Leaf>
     </>
   );
 }
