@@ -348,6 +348,23 @@ media #floating-image-container-1 {
   opacity: 0.9;
 }
 
+#floating-image-container-21 {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  vertical-align: top;
+  animation: fadeIn 1s ease-in-out;
+  background-color: transparent;
+  opacity: 0.9;
+}
+
+#floating-image-21 {
+  display: block;
+  margin: 0;
+  padding: 0;
+  opacity: 0.9;
+}
+
 @keyframes fadeIn {
   0% {
     opacity: 0;
@@ -462,86 +479,6 @@ media #floating-image-container-1 {
     width: 50px;
     height: 50px;
   }
-
-  #floating-image-22 {
-    width: 50px;
-    height: 50px;
-  }
-
-  #floating-image-23 {
-    width: 50px;
-    height: 50px;
-  }
-
-  #floating-image-24 {
-    width: 50px;
-    height: 50px;
-  }
-
-  #floating-image-25 {
-    width: 50px;
-    height: 50px;
-  }
-
-  #floating-image-26 {
-    width: 50px;
-    height: 50px;
-  }
-
-  #floating-image-27 {
-    width: 50px;
-    height: 50px;
-  }
-
-  #floating-image-28 {
-    width: 50px;
-    height: 50px;
-  }
-
-  #floating-image-29 {
-    width: 50px;
-    height: 50px;
-  }
-
-  #floating-image-30 {
-    width: 50px;
-    height: 50px;
-  }
-
-  #floating-image-31 {
-    width: 50px;
-    height: 50px;
-  }
-
-  #floating-image-32 {
-    width: 50px;
-    height: 50px;
-  }
-
-  #floating-image-33 {
-    width: 50px;
-    height: 50px;
-  }
-
-  #floating-image-34 {
-    width: 50px;
-    height: 50px;
-  }
-
-  #floating-image-35 {
-    width: 50px;
-    height: 50px;
-  }
-
-  #floating-image-36 {
-    width: 50px;
-    height: 50px;
-  }
-
-  #floating-image-37 {
-    width: 50px;
-    height: 50px;
-  }
 }
 
 @media screen and (min-width: 767px) {
@@ -646,86 +583,6 @@ media #floating-image-container-1 {
   }
 
   #floating-image-21 {
-    width: 100px;
-    height: 100px;
-  }
-
-  #floating-image-22 {
-    width: 100px;
-    height: 100px;
-  }
-
-  #floating-image-23 {
-    width: 100px;
-    height: 100px;
-  }
-
-  #floating-image-24 {
-    width: 100px;
-    height: 100px;
-  }
-
-  #floating-image-25 {
-    width: 100px;
-    height: 100px;
-  }
-
-  #floating-image-26 {
-    width: 100px;
-    height: 100px;
-  }
-
-  #floating-image-27 {
-    width: 100px;
-    height: 100px;
-  }
-
-  #floating-image-28 {
-    width: 100px;
-    height: 100px;
-  }
-
-  #floating-image-29 {
-    width: 100px;
-    height: 100px;
-  }
-
-  #floating-image-30 {
-    width: 100px;
-    height: 100px;
-  }
-
-  #floating-image-31 {
-    width: 100px;
-    height: 100px;
-  }
-
-  #floating-image-32 {
-    width: 100px;
-    height: 100px;
-  }
-
-  #floating-image-33 {
-    width: 100px;
-    height: 100px;
-  }
-
-  #floating-image-34 {
-    width: 100px;
-    height: 100px;
-  }
-
-  #floating-image-35 {
-    width: 100px;
-    height: 100px;
-  }
-
-  #floating-image-36 {
-    width: 100px;
-    height: 100px;
-  }
-
-  #floating-image-37 {
     width: 100px;
     height: 100px;
   }
