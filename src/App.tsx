@@ -1,10 +1,11 @@
 import "./App.css";
+import Leaf from "./components/Leaf";
 
 function App() {
   return (
     <>
       <div>
-        <i>The Last Leaf</i>
+        <Leaf />
       </div>
     </>
   );
