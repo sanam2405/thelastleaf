@@ -14,6 +14,7 @@ function App() {
         }}
         leafStyles={{ width: "100px", height: "auto" }}
         interactive={true}
+        leafMotion={{ SMALL_SCREEN: 35, LARGE_SCREEN: 10 }}
       >
         <div
           className="flex

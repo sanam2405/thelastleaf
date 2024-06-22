@@ -10,12 +10,18 @@ interface FloatingImagesType {
   angle: number;
 }
 
+interface leafMotionSpeed {
+  SMALL_SCREEN: number;
+  LARGE_SCREEN: number;
+}
+
 interface LeafProps {
   numberOfLeaves: number;
   leafPath: string;
   children: ReactNode;
   customStyles?: CSSProperties;
   leafStyles?: CSSProperties;
+  leafMotion?: leafMotionSpeed;
   interactive?: boolean;
 }
 
@@ -35,6 +41,7 @@ export const Leaf: FC<LeafProps> = ({
   customStyles,
   leafStyles,
   interactive = true,
+  leafMotion = { SMALL_SCREEN: 35, LARGE_SCREEN: 10 },
 }) => {
   const containerRefs = useRef<Array<HTMLDivElement | null>>(
     Array(numberOfLeaves).fill(null),
@@ -90,7 +97,9 @@ export const Leaf: FC<LeafProps> = ({
           image.lastTime = currentTime;
 
           if (!image.isPaused) {
-            const speedFactor = smallScreen ? 35 : 10;
+            const speedFactor = smallScreen
+              ? leafMotion.SMALL_SCREEN
+              : leafMotion.LARGE_SCREEN;
             image.x +=
               (Math.sin((image.angle * Math.PI) / 180) * timeDelta) /
               speedFactor;
