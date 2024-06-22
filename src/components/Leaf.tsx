@@ -1,5 +1,4 @@
-import { useRef, useEffect, FC, ReactNode } from "react";
-import styles from "../styles/Leaf.module.css";
+import { useRef, useEffect, FC, ReactNode, CSSProperties } from "react";
 
 interface FloatingImagesType {
   container: HTMLDivElement | null;
@@ -15,9 +14,28 @@ interface LeafProps {
   numberOfLeaves: number;
   leafPath: string;
   children: ReactNode;
+  customStyles?: CSSProperties;
+  leafStyles?: CSSProperties;
+  interactive?: boolean;
 }
 
-export const Leaf: FC<LeafProps> = ({ children, numberOfLeaves, leafPath }) => {
+const defaultStyles: CSSProperties = {
+  position: "relative",
+  width: "100vw",
+  height: "100vh",
+  overflow: "hidden",
+  margin: "0px",
+  padding: "0px",
+};
+
+export const Leaf: FC<LeafProps> = ({
+  children,
+  numberOfLeaves,
+  leafPath,
+  customStyles,
+  leafStyles,
+  interactive = true,
+}) => {
   const containerRefs = useRef<Array<HTMLDivElement | null>>(
     Array(numberOfLeaves).fill(null),
   );
@@ -46,24 +64,21 @@ export const Leaf: FC<LeafProps> = ({ children, numberOfLeaves, leafPath }) => {
 
   useEffect(() => {
     floatingImages.current.forEach((image) => {
-      if (image.container && image.image) {
+      if (image.container && image.image && interactive) {
         image.isPaused = false;
 
-        image.image.addEventListener("mouseenter", () => {
+        const pauseImage = () => {
           image.isPaused = true;
-        });
+        };
 
-        image.image.addEventListener("touchstart", () => {
-          image.isPaused = true;
-        });
-
-        image.image.addEventListener("mouseleave", () => {
+        const resumeImage = () => {
           image.isPaused = false;
-        });
+        };
 
-        image.image.addEventListener("touchend", () => {
-          image.isPaused = false;
-        });
+        image.image.addEventListener("mouseenter", pauseImage);
+        image.image.addEventListener("touchstart", pauseImage);
+        image.image.addEventListener("mouseleave", resumeImage);
+        image.image.addEventListener("touchend", resumeImage);
       }
     });
 
@@ -75,38 +90,24 @@ export const Leaf: FC<LeafProps> = ({ children, numberOfLeaves, leafPath }) => {
           image.lastTime = currentTime;
 
           if (!image.isPaused) {
-            if (smallScreen) {
-              image.x +=
-                (Math.sin((image.angle * Math.PI) / 180) * timeDelta) / 35;
-              image.y +=
-                (Math.cos((image.angle * Math.PI) / 180) * timeDelta) / 35;
-            } else {
-              image.x +=
-                (Math.sin((image.angle * Math.PI) / 180) * timeDelta) / 10;
-              image.y +=
-                (Math.cos((image.angle * Math.PI) / 180) * timeDelta) / 10;
-            }
+            const speedFactor = smallScreen ? 35 : 10;
+            image.x +=
+              (Math.sin((image.angle * Math.PI) / 180) * timeDelta) /
+              speedFactor;
+            image.y +=
+              (Math.cos((image.angle * Math.PI) / 180) * timeDelta) /
+              speedFactor;
             image.angle += 0.1;
           }
 
           if (image.x > window.innerWidth || image.y > window.innerHeight) {
             image.container.style.opacity = "0.1";
-
             const getRandomDirection = Math.ceil(Math.random() * 10) % 4;
-
-            if (getRandomDirection === 0) {
-              image.x = 0.85 * window.innerWidth;
-              image.y = image.image.height;
-            } else if (getRandomDirection === 1) {
-              image.x = -0.85 * window.innerWidth;
-              image.y = image.image.height;
-            } else if (getRandomDirection === 2) {
-              image.x = 0.85 * window.innerWidth;
-              image.y = image.image.height;
-            } else {
-              image.x = -0.85 * window.innerWidth;
-              image.y = image.image.height;
-            }
+            image.x =
+              getRandomDirection % 2 === 0
+                ? 0.85 * window.innerWidth
+                : -0.85 * window.innerWidth;
+            image.y = image.image.height;
             image.angle = Math.random() * 360;
 
             setTimeout(() => {
@@ -127,29 +128,29 @@ export const Leaf: FC<LeafProps> = ({ children, numberOfLeaves, leafPath }) => {
     };
 
     requestAnimationFrame(moveImages);
-  }, []);
+  }, [interactive]);
 
   return (
     <div
-      id="lastleaf-div"
-      style={{
-        display: "flex",
-        fontSize: "0px",
-        lineHeight: "0",
-        height: "1px",
-      }}
+      style={customStyles ? customStyles : defaultStyles}
+      className="overflow-x-hidden"
     >
       {Array.from({ length: numberOfLeaves }, (_, i) => (
         <div key={i} className="parent">
           <div
             ref={(el) => (containerRefs.current[i] = el)}
-            className={styles.floatingImageContainer}
+            className="inline-block m-0 p-0 vertical-align-top animate-fadeIn bg-transparent opacity-90"
+            // style={leafStyles}
           >
             <img
               src={leafPath}
               alt="thelastleaf"
               ref={(el) => (imageRefs.current[i] = el)}
-              className={styles.floatingImage}
+              className="block m-0 p-0 opacity-90"
+              style={{
+                ...leafStyles,
+                pointerEvents: interactive ? "auto" : "none",
+              }}
             />
           </div>
         </div>
@@ -163,9 +164,10 @@ export const Leaf: FC<LeafProps> = ({ children, numberOfLeaves, leafPath }) => {
           width: "100%",
           height: "100%",
           zIndex: 1,
+          pointerEvents: "none",
         }}
       >
-        {children}
+        <div style={{ pointerEvents: "auto" }}>{children}</div>
       </div>
     </div>
   );
