@@ -10,9 +10,14 @@ interface FloatingImagesType {
   angle: number;
 }
 
-interface leafMotionSpeed {
+interface IleafMotion {
   SMALL_SCREEN: number;
   LARGE_SCREEN: number;
+}
+
+interface IleafStyles {
+  SMALL_SCREEN: CSSProperties;
+  LARGE_SCREEN: CSSProperties;
 }
 
 interface LeafProps {
@@ -20,8 +25,8 @@ interface LeafProps {
   leafPath: string;
   children: ReactNode;
   customStyles?: CSSProperties;
-  leafStyles?: CSSProperties;
-  leafMotion?: leafMotionSpeed;
+  leafStyles?: IleafStyles;
+  leafMotion?: IleafMotion;
   interactive?: boolean;
 }
 
@@ -137,7 +142,7 @@ export const Leaf: FC<LeafProps> = ({
     };
 
     requestAnimationFrame(moveImages);
-  }, [interactive]);
+  }, [interactive, leafMotion]);
 
   return (
     <div
@@ -149,7 +154,6 @@ export const Leaf: FC<LeafProps> = ({
           <div
             ref={(el) => (containerRefs.current[i] = el)}
             className="inline-block m-0 p-0 vertical-align-top animate-fadeIn bg-transparent opacity-90"
-            // style={leafStyles}
           >
             <img
               src={leafPath}
@@ -157,7 +161,9 @@ export const Leaf: FC<LeafProps> = ({
               ref={(el) => (imageRefs.current[i] = el)}
               className="block m-0 p-0 opacity-90"
               style={{
-                ...leafStyles,
+                ...(window.matchMedia("(max-width: 767px)").matches
+                  ? leafStyles?.SMALL_SCREEN
+                  : leafStyles?.LARGE_SCREEN),
                 pointerEvents: interactive ? "auto" : "none",
               }}
             />

@@ -12,7 +12,16 @@ function App() {
           width: "100vw",
           height: "100vh",
         }}
-        leafStyles={{ width: "100px", height: "auto" }}
+        leafStyles={{
+          SMALL_SCREEN: {
+            width: "75px",
+            height: "auto",
+          },
+          LARGE_SCREEN: {
+            width: "100px",
+            height: "auto",
+          },
+        }}
         interactive={true}
         leafMotion={{ SMALL_SCREEN: 35, LARGE_SCREEN: 10 }}
       >
