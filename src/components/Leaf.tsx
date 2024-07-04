@@ -35,7 +35,6 @@ const defaultStyles: CSSProperties = {
   position: "relative",
   width: "100vw",
   height: "100vh",
-  overflow: "hidden",
   margin: "0px",
   padding: "0px",
 };
@@ -202,7 +201,7 @@ export const Leaf: FC<LeafProps> = ({
 
   return (
     <div
-      style={customStyles ? customStyles : defaultStyles}
+      style={{ ...defaultStyles, ...customStyles }}
       className="overflow-x-hidden"
     >
       {Array.from({ length: numberOfLeaves - 1 }, (_, i) => (
@@ -263,7 +262,7 @@ export const Leaf: FC<LeafProps> = ({
             }}
           />
         </div>
-        <div style={{ pointerEvents: "auto" }}>{children}</div>
+        <div style={{ pointerEvents: "auto", height: "100%" }}>{children}</div>
       </div>
     </div>
   );
