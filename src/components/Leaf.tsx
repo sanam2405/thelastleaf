@@ -57,7 +57,6 @@ export const Leaf: FC<LeafProps> = ({
   );
   const floatingImages = useRef<FloatingImagesType[]>([]);
 
-  // Reference for the single GSAP animated leaf
   const gsapLeafRef = useRef<HTMLDivElement>(null);
   const gsapImageRef = useRef<HTMLImageElement>(null);
 
@@ -90,16 +89,20 @@ export const Leaf: FC<LeafProps> = ({
         ]);
       };
 
-      swingLeaf();
-      swingLeaf();
-      swingLeaf();
+      const screenHeight = window.innerHeight;
+      const leafHeight = gsapLeafRef.current.offsetHeight;
+      const leafFallsNeeded = Math.ceil((screenHeight - leafHeight) / 60);
+
+      for (let i = 0; i < leafFallsNeeded; i++) {
+        swingLeaf();
+      }
     }
   }, []);
 
   useEffect(() => {
     const initFloatingImages = () => {
       floatingImages.current = Array.from(
-        { length: numberOfLeaves - 1 }, // One less because of the GSAP animated leaf
+        { length: numberOfLeaves - 1 },
         (_, i) => ({
           container: containerRefs.current[i],
           image: imageRefs.current[i],
@@ -235,33 +238,32 @@ export const Leaf: FC<LeafProps> = ({
           pointerEvents: "none",
         }}
       >
-        <div style={{ pointerEvents: "auto" }}>{children}</div>
-      </div>
-
-      <div
-        id="leaf"
-        ref={gsapLeafRef}
-        style={{
-          ...(window.matchMedia("(max-width: 767px)").matches
-            ? leafStyles?.SMALL_SCREEN
-            : leafStyles?.LARGE_SCREEN),
-          position: "relative",
-          textAlign: "center",
-          backgroundColor: "transparent",
-          pointerEvents: interactive ? "auto" : "none",
-        }}
-      >
-        <img
-          src={leafPath}
-          alt="gsap-leaf"
-          ref={gsapImageRef}
+        <div
+          id="leaf"
+          ref={gsapLeafRef}
           style={{
             ...(window.matchMedia("(max-width: 767px)").matches
               ? leafStyles?.SMALL_SCREEN
               : leafStyles?.LARGE_SCREEN),
-            pointerEvents: "none",
+            position: "relative",
+            textAlign: "center",
+            backgroundColor: "transparent",
+            pointerEvents: interactive ? "auto" : "none",
           }}
-        />
+        >
+          <img
+            src={leafPath}
+            alt="gsap-leaf"
+            ref={gsapImageRef}
+            style={{
+              ...(window.matchMedia("(max-width: 767px)").matches
+                ? leafStyles?.SMALL_SCREEN
+                : leafStyles?.LARGE_SCREEN),
+              pointerEvents: "none",
+            }}
+          />
+        </div>
+        <div style={{ pointerEvents: "auto" }}>{children}</div>
       </div>
     </div>
   );
