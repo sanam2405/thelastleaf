@@ -1,4 +1,5 @@
 import { useRef, useEffect, FC, ReactNode, CSSProperties } from "react";
+import { TimelineMax, TweenMax, Power1 } from "gsap";
 
 interface FloatingImagesType {
   container: HTMLDivElement | null;
@@ -56,10 +57,49 @@ export const Leaf: FC<LeafProps> = ({
   );
   const floatingImages = useRef<FloatingImagesType[]>([]);
 
+  // Reference for the single GSAP animated leaf
+  const gsapLeafRef = useRef<HTMLDivElement>(null);
+  const gsapImageRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    if (gsapLeafRef.current) {
+      const tl = new TimelineMax({ repeat: -1 });
+      tl.set(gsapLeafRef.current, { rotation: 5 });
+
+      const swingLeaf = () => {
+        tl.add([
+          TweenMax.to(gsapLeafRef.current, 2, {
+            left: 500,
+            rotation: -5,
+            ease: Power1.easeInOut,
+          }),
+          TweenMax.to(gsapLeafRef.current, 2, {
+            top: "+=30",
+            ease: Power1.easeOut,
+          }),
+        ]).add([
+          TweenMax.to(gsapLeafRef.current, 2, {
+            left: 0,
+            rotation: 5,
+            ease: Power1.easeInOut,
+          }),
+          TweenMax.to(gsapLeafRef.current, 2, {
+            top: "+=30",
+            ease: Power1.easeOut,
+          }),
+        ]);
+      };
+
+      swingLeaf();
+      swingLeaf();
+      swingLeaf();
+    }
+  }, []);
+
   useEffect(() => {
     const initFloatingImages = () => {
       floatingImages.current = Array.from(
-        { length: numberOfLeaves },
+        { length: numberOfLeaves - 1 }, // One less because of the GSAP animated leaf
         (_, i) => ({
           container: containerRefs.current[i],
           image: imageRefs.current[i],
@@ -75,24 +115,37 @@ export const Leaf: FC<LeafProps> = ({
   }, [numberOfLeaves]);
 
   useEffect(() => {
+    const pauseLeafs = () => {
+      floatingImages.current.forEach((image) => {
+        if (image.container && image.image && interactive) {
+          image.isPaused = true;
+        }
+      });
+      gsapLeafRef.current?.setAttribute("data-is-paused", "true");
+    };
+
+    const resumeLeafs = () => {
+      floatingImages.current.forEach((image) => {
+        if (image.container && image.image && interactive) {
+          image.isPaused = false;
+        }
+      });
+      gsapLeafRef.current?.removeAttribute("data-is-paused");
+    };
+
     floatingImages.current.forEach((image) => {
       if (image.container && image.image && interactive) {
-        image.isPaused = false;
-
-        const pauseImage = () => {
-          image.isPaused = true;
-        };
-
-        const resumeImage = () => {
-          image.isPaused = false;
-        };
-
-        image.image.addEventListener("mouseenter", pauseImage);
-        image.image.addEventListener("touchstart", pauseImage);
-        image.image.addEventListener("mouseleave", resumeImage);
-        image.image.addEventListener("touchend", resumeImage);
+        image.image.addEventListener("mouseenter", pauseLeafs);
+        image.image.addEventListener("touchstart", pauseLeafs);
+        image.image.addEventListener("mouseleave", resumeLeafs);
+        image.image.addEventListener("touchend", resumeLeafs);
       }
     });
+
+    gsapImageRef.current?.addEventListener("mouseenter", pauseLeafs);
+    gsapImageRef.current?.addEventListener("touchstart", pauseLeafs);
+    gsapImageRef.current?.addEventListener("mouseleave", resumeLeafs);
+    gsapImageRef.current?.addEventListener("touchend", resumeLeafs);
 
     const moveImages = (currentTime: number) => {
       floatingImages.current.forEach((image) => {
@@ -149,7 +202,7 @@ export const Leaf: FC<LeafProps> = ({
       style={customStyles ? customStyles : defaultStyles}
       className="overflow-x-hidden"
     >
-      {Array.from({ length: numberOfLeaves }, (_, i) => (
+      {Array.from({ length: numberOfLeaves - 1 }, (_, i) => (
         <div key={i} className="parent">
           <div
             ref={(el) => (containerRefs.current[i] = el)}
@@ -183,6 +236,32 @@ export const Leaf: FC<LeafProps> = ({
         }}
       >
         <div style={{ pointerEvents: "auto" }}>{children}</div>
+      </div>
+
+      <div
+        id="leaf"
+        ref={gsapLeafRef}
+        style={{
+          ...(window.matchMedia("(max-width: 767px)").matches
+            ? leafStyles?.SMALL_SCREEN
+            : leafStyles?.LARGE_SCREEN),
+          position: "relative",
+          textAlign: "center",
+          backgroundColor: "transparent",
+          pointerEvents: interactive ? "auto" : "none",
+        }}
+      >
+        <img
+          src={leafPath}
+          alt="gsap-leaf"
+          ref={gsapImageRef}
+          style={{
+            ...(window.matchMedia("(max-width: 767px)").matches
+              ? leafStyles?.SMALL_SCREEN
+              : leafStyles?.LARGE_SCREEN),
+            pointerEvents: "none",
+          }}
+        />
       </div>
     </div>
   );
