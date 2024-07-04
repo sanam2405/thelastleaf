@@ -25,7 +25,7 @@ function App() {
         interactive={true}
         leafMotion={{ SMALL_SCREEN: 35, LARGE_SCREEN: 10 }}
       >
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center mt-0">
           <i>The Last Leaf</i>
         </div>
       </Leaf>

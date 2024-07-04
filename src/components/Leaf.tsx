@@ -63,12 +63,12 @@ export const Leaf: FC<LeafProps> = ({
   useEffect(() => {
     if (gsapLeafRef.current) {
       const tl = new TimelineMax({ repeat: -1 });
-      tl.set(gsapLeafRef.current, { rotation: 5 });
-
+      tl.set(gsapLeafRef.current, { rotation: 5, top: 0, left: 0 });
+      const smallScreen = window.matchMedia("(max-width: 767px)").matches;
       const swingLeaf = () => {
         tl.add([
           TweenMax.to(gsapLeafRef.current, 2, {
-            left: 500,
+            left: smallScreen ? 300 : 500,
             rotation: -5,
             ease: Power1.easeInOut,
           }),
